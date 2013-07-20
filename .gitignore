@@ -1,8 +1,0 @@
-.settings/
-bin/
-gen/
-.classpath
-.project
-lint.xml
-project.properties
-.gitignore
