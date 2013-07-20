@@ -56,7 +56,7 @@ public class InCallReceiver extends BroadcastReceiver {
 		String incoming_number = intent.getStringExtra("incoming_number");
 		DatagramSocket socket = null;
 		try {
-			String data = android.text.TextUtils.join("\u0008", new String[]{android_id + " " + android.os.Build.MODEL + " " + state + " " + incoming_number});
+			String data = android.text.TextUtils.join("\u0008", new String[]{android_id , android.os.Build.MODEL , state , incoming_number});
 			//Log.v(TAG, data);
 			String broadcastAddress = getBroadcast();
 			socket = new DatagramSocket(60069);
