@@ -26,6 +26,34 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 	private static String TAG = "noti";
+	
+	private void sendmsg(String msg,String body){
+		String android_id = Secure.getString(MainActivity.this.getContentResolver(), Secure.ANDROID_ID);
+		String state = msg;
+		String incoming_number = body;
+		DatagramSocket socket = null;
+		try {
+			String data = android.text.TextUtils.join("\u0008", new String[]{android_id , android.os.Build.MODEL , state , incoming_number});
+			//Log.v(TAG, data);
+			String broadcastAddress = getBroadcast();
+			socket = new DatagramSocket(60069);
+			Log.v(TAG, broadcastAddress);
+			DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(broadcastAddress), 60069);
+			socket.send(packet);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				socket.close();
+				socket.disconnect();
+			}
+			catch(Exception e){
+			}
+		}	
+	}
     
     private static String getBroadcast() throws SocketException {
         System.setProperty("java.net.preferIPv4Stack", "true");
@@ -51,36 +79,35 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Button b = (Button)findViewById(R.id.button1);
-        b.setOnClickListener(new View.OnClickListener() {
-			
+        Button btn_ring = (Button)findViewById(R.id.button_ring);
+        btn_ring.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String android_id = Secure.getString(MainActivity.this.getContentResolver(), Secure.ANDROID_ID);
-				String state = "RINGING";
-				String incoming_number = "0894857223";
-				DatagramSocket socket = null;
-				try {
-					String data = android.text.TextUtils.join("\u0008", new String[]{android_id , android.os.Build.MODEL , state , incoming_number});
-					//Log.v(TAG, data);
-					String broadcastAddress = getBroadcast();
-					socket = new DatagramSocket(60069);
-					Log.v(TAG, broadcastAddress);
-					DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(broadcastAddress), 60069);
-					socket.send(packet);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				finally{
-					try{
-						socket.close();
-						socket.disconnect();
-					}
-					catch(Exception e){
-					}
-				}	
+				sendmsg("RINGING","0894857223");
+			}
+		});
+        
+        Button btn_pair = (Button)findViewById(R.id.button_pair);
+        btn_pair.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendmsg("PAIR","PAIR");
+			}
+		});
+        
+        Button btn_offhook = (Button)findViewById(R.id.button_offhook);
+        btn_offhook.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendmsg("OFFHOOK","OFFHOOK");
+			}
+		});
+        
+        Button btn_idle = (Button)findViewById(R.id.button_idle);
+        btn_idle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendmsg("IDLE","IDLE");
 			}
 		});
     }

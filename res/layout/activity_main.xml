@@ -9,11 +9,38 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_ring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Button" />
+        android:text="Ring" />
+
+    <Button
+        android:id="@+id/button_pair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_ring"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:text="Pair" />
+
+    <Button
+        android:id="@+id/button_offhook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_ring"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Offhook" />
+
+    <Button
+        android:id="@+id/button_idle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/button_offhook"
+        android:layout_marginTop="8dp"
+        android:text="Idle" />
 
 </RelativeLayout>
