@@ -49,31 +49,33 @@ public class InCallReceiver extends BroadcastReceiver {
     
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		//Log.d(TAG, "InCallReceiver.onReceive" + intent.toString());
-		//Set<String> s = intent.getExtras().keySet();
-		String android_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-		String state = intent.getStringExtra("state");
-		String incoming_number = intent.getStringExtra("incoming_number");
-		DatagramSocket socket = null;
-		try {
-			String data = android.text.TextUtils.join("\u0008", new String[]{android_id , android.os.Build.MODEL , state , incoming_number});
-			//Log.v(TAG, data);
-			String broadcastAddress = getBroadcast();
-			socket = new DatagramSocket(60069);
-			Log.v(TAG, broadcastAddress);
-			DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(broadcastAddress), 60069);
-			socket.send(packet);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally{
-			try{
-				socket.close();
-				socket.disconnect();
-			}
-			catch(Exception e){
+		android.net.wifi.WifiManager wifiMgr = (android.net.wifi.WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+		if(wifiMgr.getWifiState()==android.net.wifi.WifiManager.WIFI_STATE_ENABLED){
+			String android_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+			
+			if(intent.hasExtra("state") && intent.hasExtra("incoming_number")){
+				String state = intent.getStringExtra("state");
+				String incoming_number = intent.getStringExtra("incoming_number");
+				DatagramSocket socket = null;
+				try {
+					String data = android.text.TextUtils.join("\u0008", new String[]{android_id , android.os.Build.MODEL , state , incoming_number});
+					String broadcastAddress = getBroadcast();
+					socket = new DatagramSocket(60069);
+					DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(broadcastAddress), 60069);
+					socket.send(packet);
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				finally{
+					try{
+						socket.close();
+						socket.disconnect();
+					}
+					catch(Exception e){
+					}
+				}
 			}
 		}
 	}
